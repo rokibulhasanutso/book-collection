@@ -17,21 +17,29 @@ app.get('/books', (req, res) => {
 
 // POST /books route handler
 app.post('/books', (req, res) => {
-  const book = req.body;
-  book.id = Math.random().toString(36).substr(2, 9);
+  const id = Date.now().toString();
+  const { title, author, publishedDate } = req.body;
+  const book = {
+    id,
+    title,
+    author,
+    publishedDate
+  };
+  
   books.push(book);
   res.json(book);
 });
 
 // DELETE /books/:id route handler
 app.delete('/books/:id', (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const index = books.findIndex(book => book.id === id);
+  
   if (index !== -1) {
     books.splice(index, 1);
-    res.json({ message: 'Book successfully deleted' });
+    res.json({ message: `ID: ${id} [ This book successfully deleted ]` });
   } else {
-    res.status(404).json({ message: 'Book not found' });
+    res.status(404).json({ message: `ID: ${id} [ This book not found ]` });
   }
 });
 
