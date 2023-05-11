@@ -26,8 +26,12 @@ app.post('/books', (req, res) => {
     publishedDate
   };
   
-  books.push(book);
-  res.json(book);
+  if (!title || !author) {
+    return res.status(400).json({ message: "Title and Athor are required." });
+  } else {
+      books.push(book);
+      res.json(book);
+  }
 });
 
 // DELETE /books/:id route handler
@@ -36,8 +40,8 @@ app.delete('/books/:id', (req, res) => {
   const index = books.findIndex(book => book.id === id);
   
   if (index !== -1) {
-    books.splice(index, 1);
-    res.json({ message: `ID: ${id} [ This book successfully deleted ]` });
+    const deletedBook = books.splice(index, 1)[0];
+    res.json({ message: `${deletedBook} [ This book successfully deleted ]` });
   } else {
     res.status(404).json({ message: `ID: ${id} [ This book not found ]` });
   }
